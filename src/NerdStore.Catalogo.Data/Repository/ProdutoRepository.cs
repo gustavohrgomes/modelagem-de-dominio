@@ -1,10 +1,6 @@
-﻿using NerdStore.Catalogo.Domain;
+﻿using Microsoft.EntityFrameworkCore;
+using NerdStore.Catalogo.Domain;
 using NerdStore.Core.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NerdStore.Catalogo.Data.Repository
 {
@@ -18,7 +14,7 @@ namespace NerdStore.Catalogo.Data.Repository
             _context = context;
         }
 
-        public IUnitOfWork unitOfWork => _context;
+        public IUnitOfWork UnitOfWork => _context;
 
         public async Task<IEnumerable<Produto>> ObterTodos()
         {
@@ -60,9 +56,33 @@ namespace NerdStore.Catalogo.Data.Repository
             _context.Categorias.Update(categoria);
         }
 
+        #region Disposable Members
+
+        private bool disposedValue;
+
+        private void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects)
+                    _context?.Dispose();
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
+                // TODO: set large fields to null
+                disposedValue = true;
+            }
+        }
+
         public void Dispose()
         {
-            _context?.Dispose();
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
+
+        #endregion
     }
 }

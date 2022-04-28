@@ -33,7 +33,8 @@ namespace NerdStore.Catalogo.Data.Repository
 
         public async Task<IEnumerable<Categoria>> ObterCategorias()
         {
-            return await _context.Categorias.AsNoTracking().ToListAsync();
+            var categorias = await _context.Categorias.AsNoTracking().ToListAsync();
+            return categorias;
         }
 
         public void Adicionar(Produto produto)

@@ -6,9 +6,9 @@ namespace NerdStore.Core.Messages
     {
         public DateTime Timestamp { get; private set; }
 
-        public Event()
+        protected Event()
         {
-            Timestamp = DateTime.UtcNow;
+            Timestamp = DateTime.Now;
         }
     }
 }

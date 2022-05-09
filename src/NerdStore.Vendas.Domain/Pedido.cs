@@ -50,25 +50,14 @@ namespace NerdStore.Vendas.Domain
         {
             if (!VoucherUtilizado) return;
 
-            decimal desconto = 0;
-            var valor = ValorTotal;
-
-            if (Voucher.TipoDescontoVoucher == TipoDescontoVoucher.Porcentagem)
+            decimal desconto = Voucher.TipoDescontoVoucher switch
             {
-                if (Voucher.Percentual.HasValue)
-                {
-                    desconto = (valor * Voucher.Percentual.Value) / 100;
-                    valor -= desconto;
-                }
-            }
-            else
-            {
-                if (Voucher.ValorDesconto.HasValue)
-                {
-                    desconto = Voucher.ValorDesconto.Value;
-                    valor -= desconto;
-                }
-            }
+                TipoDescontoVoucher.Porcentagem => CalcularValorDescontoPorcentagem(),
+                TipoDescontoVoucher.Valor => Voucher.ValorDesconto.HasValue ? Voucher.ValorDesconto.Value : 0,
+                _ => 0
+            };
+            
+            var valor = ValorTotal -= desconto;
 
             ValorTotal = valor < 0 ? 0 : valor;
             Desconto = desconto;
@@ -150,6 +139,13 @@ namespace NerdStore.Vendas.Domain
         public void CancelarPedido()
         {
             PedidoStatus = PedidoStatus.Cancelado;
+        }
+
+        private decimal CalcularValorDescontoPorcentagem()
+        {
+            if (!Voucher.Percentual.HasValue) return 0;
+
+            return ValorTotal * Voucher.Percentual.Value / 100;
         }
 
         public static class PedidoFactory

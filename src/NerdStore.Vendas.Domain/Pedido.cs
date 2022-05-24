@@ -1,4 +1,5 @@
-﻿using NerdStore.Core.DomainObjects;
+﻿using FluentValidation.Results;
+using NerdStore.Core.DomainObjects;
 
 namespace NerdStore.Vendas.Domain
 {
@@ -33,11 +34,16 @@ namespace NerdStore.Vendas.Domain
         // EF Relation
         public Voucher Voucher { get; private set; }
 
-        public void AplicarVoucher(Voucher voucher)
+        public ValidationResult AplicarVoucher(Voucher voucher)
         {
+            var voucherValidadoResult = voucher.ValidarSeAplicavel();
+            if (!voucherValidadoResult.IsValid) return voucherValidadoResult;
+
             Voucher = voucher;
             VoucherUtilizado = true;
             CalcularValorPedido();
+
+            return voucherValidadoResult;
         }
 
         public void CalcularValorPedido()

@@ -37,7 +37,7 @@ services.AddAutoMapper(typeof(DomainToViewModelMappingProfile), typeof(ViewModel
 
 services.AddMediatR(typeof(Program));
 
-services.RegisterServices();
+services.RegisterServices(configuration);
 
 var app = builder.Build();
 
